@@ -1,0 +1,7 @@
+{
+  "name": "registrApp-tw",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
