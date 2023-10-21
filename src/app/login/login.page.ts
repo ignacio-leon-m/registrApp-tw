@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StateService } from '../state/state.service';
+import { LoginService } from './login.service';
 
 interface Usuario {
   nombre: string;
@@ -24,13 +25,22 @@ export class LoginPage implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private router: Router, private stateService: StateService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private stateService: StateService,
+    private loginService: LoginService
+    ) {
     this.formIngresarUsuario = this.fb.group(
       {
         nombre: [""],
         password: [""]
       }
     )
+   }
+
+   login(){
+     this.loginService.setIsLogged(true);
    }
 
   ngOnInit() {
@@ -40,6 +50,14 @@ export class LoginPage implements OnInit {
     const usuario = {
       nombre: this.formIngresarUsuario.get('nombre')?.value,
       password: this.formIngresarUsuario.get('password')?.value
+    };
+
+    //Éste if es para que no se pueda ingresar a la página de home sin haber iniciado sesión
+    if(usuario.nombre === this.usuario1.nombre && usuario.password === this.usuario1.password){
+      this.loginService.setIsLogged(true);
+      this.router.navigate(['home']);
+    } else {
+      alert('Usuario o contraseña incorrecto, vuelve a intentarlo');
     }
 
     if(usuario.nombre === '' || usuario.password === ''){
